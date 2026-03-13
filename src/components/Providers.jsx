@@ -1,5 +1,5 @@
 "use client";
-import { ImageKitProvider } from "imagekitio-next";
+import { ImageKitProvider } from "@imagekit/next";
 
 const publicKey = process.env.NEXT_PUBLIC_PUBLIC_KEY;
 const urlEndpoint = process.env.NEXT_PUBLIC_URL_ENDPOINT;
@@ -12,7 +12,7 @@ export default function Providers({ children }) {
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(
-          `Request failed with status ${response.status}: ${errorText}`
+          `Request failed with status ${response.status}: ${errorText}`,
         );
       }
 

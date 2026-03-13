@@ -1,6 +1,6 @@
 "use client";
-import React, { useState } from "react";
-import { IKUpload } from "imagekitio-next";
+import React, { useState, useRef } from "react";
+import { upload } from "@imagekit/next";
 import { Loader2 } from "lucide-react";
 
 export default function FileUpload({
@@ -10,6 +10,8 @@ export default function FileUpload({
 }) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
+  const fileInputRef = useRef(null);
+
   const onError = (err) => {
     console.log("Error", err);
     setError(err.message);
@@ -33,9 +35,10 @@ export default function FileUpload({
       onProgress(Math.round(percentComplete));
     }
   };
+
   const validateFile = (file) => {
     if (fileType === "video") {
-      if (!fileType.type.startsWith("video/")) {
+      if (!file.type.startsWith("video/")) {
         setError("Please upload a video file");
         return false;
       }
@@ -44,29 +47,61 @@ export default function FileUpload({
         return false;
       }
     } else {
-      const validTypes = ["image/jpeg", "image/png", "image/webp", "pdf"];
+      const validTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "application/pdf",
+      ];
       if (!validTypes.includes(file.type)) {
-        setError("Please upload a valid file (JPEG, PNG, webP,pdf)");
+        setError("Please upload a valid file (JPEG, PNG, webP, PDF)");
         return false;
       }
       if (file.size > 10 * 1024 * 1024) {
-        setError("Video must be less than 10 MB");
+        setError("File must be less than 10 MB");
         return false;
       }
     }
-    return false;
+    return true;
   };
+
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!validateFile(file)) return;
+
+    setUploading(true);
+    setError(null);
+
+    try {
+      const result = await upload({
+        file,
+        fileName: fileType === "pdf" ? "pdf" : "image",
+        useUniqueFileName: true,
+        folder: fileType === "pdf" ? "pdf/" : "image/",
+        onUploadProgress: handleProgress,
+        onUploadStart: handleStartUpload,
+      });
+      handleSuccess(result);
+    } catch (err) {
+      onError(err);
+    }
+  };
+
   return (
     <div className="space-y-2">
-      <IKUpload
-        fileName={fileType === "pdf" ? "pdf" : "image"}
-        useUniqueFileName={true}
-        validateFile={validateFile}
-        onError={onError}
-        onSuccess={handleSuccess}
-        onUploadProgress={handleProgress}
-        onUploadStart={handleStartUpload}
-        folder={fileType === "pdf" ? "pdf/*" : "image/*"}
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        accept={
+          fileType === "video"
+            ? "video/*"
+            : fileType === "pdf"
+              ? ".pdf"
+              : "image/*"
+        }
         className="file-input file-input-bordered w-full"
       />
       {uploading && (
