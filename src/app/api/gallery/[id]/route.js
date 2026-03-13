@@ -1,9 +1,12 @@
 import Gallery from "@/models/Gallery";
 import GalleryImage from "@/models/GalleryImage";
 import { NextResponse } from "next/server";
+import connectToDatabase from "@/lib/mongodb";
 
 export async function GET(req, { params }) {
   const { id } = await params;
+
+  await connectToDatabase();
 
   try {
     const gallery = await Gallery.findById(id).populate("event_id").exec();
@@ -25,7 +28,7 @@ export async function GET(req, { params }) {
   } catch (error) {
     return NextResponse.json(
       { message: "Server error", error: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -83,7 +86,7 @@ export async function PUT(req, { params }) {
     if (!gallery) {
       return NextResponse.json(
         { message: "Gallery not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -91,7 +94,9 @@ export async function PUT(req, { params }) {
     gallery.title = title || gallery.title;
     await gallery.save();
 
-    const updatedGallery = await Gallery.findById(id).populate("event_id").exec();
+    const updatedGallery = await Gallery.findById(id)
+      .populate("event_id")
+      .exec();
     const galleryImages = await GalleryImage.find({ gallery_id: id }).exec();
 
     const result = {
@@ -103,7 +108,7 @@ export async function PUT(req, { params }) {
   } catch (error) {
     return NextResponse.json(
       { message: "Server error", error: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -116,17 +121,17 @@ export async function DELETE(req, { params }) {
     if (!deleted) {
       return NextResponse.json(
         { message: "Gallery not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
     return NextResponse.json(
       { message: "Gallery deleted successfully" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return NextResponse.json(
       { message: "Server error", error: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

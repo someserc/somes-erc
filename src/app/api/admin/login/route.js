@@ -4,7 +4,17 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 export async function POST(req) {
-  await connectToDatabase();
+  try {
+    await connectToDatabase();
+  } catch (error) {
+    console.error("Database connection error:", error);
+    return new Response(
+      JSON.stringify({ error: "Database connection failed" }),
+      {
+        status: 500,
+      },
+    );
+  }
   const { username, password } = await req.json();
 
   const admin = await Admin.findOne({ username });
@@ -26,7 +36,7 @@ export async function POST(req) {
     process.env.NEXTAUTH_SECRET,
     {
       expiresIn: "2h",
-    }
+    },
   );
 
   return new Response(JSON.stringify({ message: "Login successful", token }), {

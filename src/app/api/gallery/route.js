@@ -8,14 +8,16 @@ export async function GET(req, res) {
     const galleries = await Gallery.find().populate("event_id").exec();
     const galleryImages = await GalleryImage.find().exec();
 
-    const result = galleries?.map((gallery) => {
-      return {
-        ...gallery._doc,
-        images: galleryImages?.filter(
-          (image) => image.gallery_id.toString() === gallery._id.toString()
-        ),
-      };
-    });
+    const result = galleries
+      ?.filter((gallery) => gallery._id)
+      .map((gallery) => {
+        return {
+          ...gallery._doc,
+          images: galleryImages?.filter(
+            (image) => image.gallery_id.toString() === gallery._id.toString(),
+          ),
+        };
+      });
 
     return new Response(JSON.stringify(result), { status: 200 });
   } catch (error) {
@@ -34,7 +36,7 @@ export async function POST(req, res) {
     if (!body.title || !body.thumbnail_url) {
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),
-        { status: 400 }
+        { status: 400 },
       );
     }
 

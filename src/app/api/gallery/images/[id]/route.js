@@ -2,9 +2,12 @@ import Gallery from "@/models/Gallery";
 import GalleryImage from "@/models/GalleryImage";
 import { handleMultipleFileUpload } from "@/utils/handleMultipleFileUpload";
 import { NextResponse } from "next/server";
+import connectToDatabase from "@/lib/mongodb";
 
 export async function GET(request, { params }) {
   const { id } = await params;
+
+  await connectToDatabase();
 
   try {
     const gallery = await Gallery.findById(id).select("title");
@@ -25,7 +28,7 @@ export async function GET(request, { params }) {
           images: galleryImages,
         },
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return new Response("Internal Server Error", { status: 500 });
@@ -35,6 +38,8 @@ export async function GET(request, { params }) {
 export async function POST(request, { params }) {
   const { id } = params;
   const { imageUrls } = await request.json();
+
+  await connectToDatabase();
 
   try {
     const gallery = await Gallery.findById(id);
@@ -54,7 +59,7 @@ export async function POST(request, { params }) {
         status: "success",
         data: newImages,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     console.error("Error saving images:", error);
@@ -79,7 +84,7 @@ export async function DELETE(request, { params }) {
         status: "success",
         message: "Image deleted successfully",
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return new Response("Internal Server Error", { status: 500 });

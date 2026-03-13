@@ -31,6 +31,7 @@ const GallerySlug = () => {
   const [blockScroll, allowScroll] = useScrollBlock();
   const [selectedId, setSelectedId] = useState();
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const loader = [1, 2, 3, 4, 5, 6, 7, 8];
 
   const getGallery = async () => {
@@ -48,8 +49,11 @@ const GallerySlug = () => {
   };
 
   useEffect(() => {
-    if (slug) {
+    if (slug && slug !== "undefined") {
       getGallery();
+    } else {
+      setError("Invalid gallery ID");
+      setLoading(false);
     }
   }, [slug]);
 
@@ -69,12 +73,24 @@ const GallerySlug = () => {
 
   const showPrevImage = () => {
     setPopupIndex((prevIndex) =>
-      prevIndex === 0 ? gallery.images.length - 1 : prevIndex - 1
+      prevIndex === 0 ? gallery.images.length - 1 : prevIndex - 1,
     );
   };
 
   return (
     <div className="relative flex flex-col items-center min-h-[49rem] w-[100%]">
+      {error && (
+        <div className="w-full flex flex-col items-center justify-center min-h-[49rem]">
+          <h2 className="text-red-500 text-2xl">{error}</h2>
+          <button
+            onClick={() => router.push("/gallery")}
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+          >
+            Back to Gallery
+          </button>
+        </div>
+      )}
+      {!error && (
       <div className="w-[95%] flex h-[4rem] items-center mt-5 ">
         <svg
           width={40}

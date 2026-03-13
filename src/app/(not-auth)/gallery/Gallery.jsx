@@ -73,31 +73,33 @@ const Gallery = () => {
               </div>
             ))
           ) : gallery.length > 0 ? (
-            gallery.map((item) => (
-              <Link
-                key={item._id}
-                href={`/gallery/${item._id}`}
-                className="group bg-white border border-background-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition"
-              >
-                {/* Image */}
-                <div className="relative h-56 w-full overflow-hidden">
-                  <Image
-                    src={item.thumbnail_url}
-                    alt={item.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    unoptimized
-                  />
-                </div>
+            gallery
+              .filter((item) => item._id)
+              .map((item) => (
+                <Link
+                  key={item._id}
+                  href={`/gallery/${item._id}`}
+                  className="group bg-white border border-background-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition"
+                >
+                  {/* Image */}
+                  <div className="relative h-56 w-full overflow-hidden">
+                    <Image
+                      src={item.thumbnail_url}
+                      alt={item.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      unoptimized
+                    />
+                  </div>
 
-                {/* Title */}
-                <div className="p-4">
-                  <h3 className="text-sm md:text-base font-semibold text-background-900 group-hover:text-primary-600 transition">
-                    {item.title}
-                  </h3>
-                </div>
-              </Link>
-            ))
+                  {/* Title */}
+                  <div className="p-4">
+                    <h3 className="text-sm md:text-base font-semibold text-background-900 group-hover:text-primary-600 transition">
+                      {item.title}
+                    </h3>
+                  </div>
+                </Link>
+              ))
           ) : (
             <p className="text-background-600 text-sm col-span-full text-center">
               No gallery items found.
