@@ -7,6 +7,12 @@ import connectToDatabase from "@/lib/mongodb";
 export async function GET(request, { params }) {
   const { id } = await params;
 
+  if (!id || id === "undefined" || id.length !== 24) {
+    return new Response(JSON.stringify({ error: "Invalid gallery ID" }), {
+      status: 400,
+    });
+  }
+
   await connectToDatabase();
 
   try {
@@ -37,6 +43,13 @@ export async function GET(request, { params }) {
 
 export async function POST(request, { params }) {
   const { id } = params;
+
+  if (!id || id === "undefined" || id.length !== 24) {
+    return new Response(JSON.stringify({ error: "Invalid gallery ID" }), {
+      status: 400,
+    });
+  }
+
   const { imageUrls } = await request.json();
 
   await connectToDatabase();

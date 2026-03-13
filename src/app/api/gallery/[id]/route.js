@@ -6,6 +6,12 @@ import connectToDatabase from "@/lib/mongodb";
 export async function GET(req, { params }) {
   const { id } = await params;
 
+  if (!id || id === "undefined" || id.length !== 24) {
+    return new Response(JSON.stringify({ error: "Invalid gallery ID" }), {
+      status: 400,
+    });
+  }
+
   await connectToDatabase();
 
   try {
