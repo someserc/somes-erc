@@ -1,6 +1,4 @@
-import CoreValues from "@/components/Home/CoreValues";
 import Events from "@/components/Home/Events";
-import FAQ from "@/components/Home/FAQ";
 import Hero from "@/components/Home/Hero";
 import Messages from "@/components/Home/Messages";
 import Notices from "@/components/Home/Notices";
@@ -24,22 +22,14 @@ export default function Home() {
       <div className="w-[90%] ">
         <Messages />
       </div>
-      {/* <div className="w-[90%] ">
-        <CoreValues />
-      </div> */}
 
       <div className="w-[90%] ">
         <Events />
       </div>
-      {/* <div className="w-[90%] ">
-        <Notices />
-      </div> */}
+
       <div className="w-[90%]">
         <Testimonials />
       </div>
-      {/* <div className="w-[90%]">
-        <FAQ />
-      </div> */}
     </div>
   );
 }

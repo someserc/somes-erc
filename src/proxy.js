@@ -5,7 +5,7 @@ const secret = new TextEncoder().encode(process.env.NEXTAUTH_SECRET);
 
 const publicApiRoutes = ["/api/admin/login", "/api/admin/register"]; // Add more public API routes here
 
-export async function middleware(req) {
+export async function proxy(req) {
   const { pathname } = req.nextUrl;
   const method = req.method;
 

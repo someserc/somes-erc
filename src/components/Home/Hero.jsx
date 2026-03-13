@@ -16,7 +16,7 @@ const Hero = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowSplash(false);
-    }, 800); // 0.8 seconds
+    }, 1000); // 0.8 seconds
 
     return () => clearTimeout(timer);
   }, []);
