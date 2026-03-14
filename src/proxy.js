@@ -3,11 +3,27 @@ import { jwtVerify } from "jose";
 
 const secret = new TextEncoder().encode(process.env.NEXTAUTH_SECRET);
 
-const publicApiRoutes = ["/api/admin/login", "/api/admin/register"]; // Add more public API routes here
+const publicApiRoutes = ["/api/admin/login"];
 
 export async function proxy(req) {
   const { pathname } = req.nextUrl;
   const method = req.method;
+
+  let token = req.cookies.get("token")?.value;
+
+  if (!token && req.headers.get("authorization")?.startsWith("Bearer ")) {
+    token = req.headers.get("authorization")?.replace("Bearer ", "");
+  }
+
+  // ✅ Prevent logged-in users from accessing login page
+  if (pathname === "/login" && token) {
+    try {
+      await jwtVerify(token, secret);
+      return NextResponse.redirect(new URL("/admin", req.url));
+    } catch {
+      // invalid token → allow login page
+    }
+  }
 
   const protectedPaths = ["/admin", "/api"];
   const isProtected = protectedPaths.some((path) => pathname.startsWith(path));
@@ -16,20 +32,14 @@ export async function proxy(req) {
     return NextResponse.next();
   }
 
-  // ✅ Allow unauthenticated access to public API routes
+  // Allow public APIs
   if (publicApiRoutes.includes(pathname)) {
     return NextResponse.next();
   }
 
-  // ✅ Allow unauthenticated GET requests to /api/*
+  // Allow public GET APIs
   if (pathname.startsWith("/api") && method === "GET") {
     return NextResponse.next();
-  }
-
-  let token = req.cookies.get("token")?.value;
-
-  if (!token && req.headers.get("authorization")?.startsWith("Bearer ")) {
-    token = req.headers.get("authorization")?.replace("Bearer ", "");
   }
 
   if (!token) {
@@ -46,7 +56,7 @@ export async function proxy(req) {
   try {
     await jwtVerify(token, secret);
     return NextResponse.next();
-  } catch (error) {
+  } catch {
     if (pathname.startsWith("/api")) {
       return new NextResponse(JSON.stringify({ message: "Invalid token" }), {
         status: 403,
@@ -59,5 +69,5 @@ export async function proxy(req) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/:path*"],
+  matcher: ["/admin/:path*", "/api/:path*", "/login"], // include login
 };

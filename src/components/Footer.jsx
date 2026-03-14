@@ -114,19 +114,6 @@ const Footer = () => {
               Facebook
             </Link>
             <span className="text-primary-700">•</span>
-            <Link
-              href="https://www.instagram.com/fsuerc/"
-              className="hover:text-secondary-600 transition-colors"
-            >
-              Instagram
-            </Link>
-            <span className="text-primary-700">•</span>
-            <Link
-              href="https://www.linkedin.com/company/107169823"
-              className="hover:text-secondary-600 transition-colors"
-            >
-              LinkedIn
-            </Link>
           </div>
         </div>
       </div>
