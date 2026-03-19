@@ -37,6 +37,7 @@ export default function CreateNote({
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
+  // ---------------- DRIVE ----------------
   const updateDriveLink = (i, field, value) => {
     const updated = [...form.driveLinks];
     updated[i][field] = value;
@@ -49,23 +50,49 @@ export default function CreateNote({
       driveLinks: [...form.driveLinks, { title: "", url: "" }],
     });
 
+  const removeDriveLink = (i) => {
+    const updated = form.driveLinks.filter((_, idx) => idx !== i);
+    setForm({ ...form, driveLinks: updated });
+  };
+
+  // ---------------- YOUTUBE ----------------
   const handleYoutubeChange = (i, value) => {
     const updated = [...form.youtubeLinks];
     updated[i] = value;
     setForm({ ...form, youtubeLinks: updated });
   };
 
+  const addYoutubeLink = () =>
+    setForm({
+      ...form,
+      youtubeLinks: [...form.youtubeLinks, ""],
+    });
+
+  const removeYoutubeLink = (i) => {
+    const updated = form.youtubeLinks.filter((_, idx) => idx !== i);
+    setForm({ ...form, youtubeLinks: updated });
+  };
+
+  // ---------------- SUBMIT ----------------
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
       const payload = {
-        ...form,
+        courseType: form.courseType,
+        semester: form.semester,
+        subject: form.subject,
+        difficulty: form.difficulty,
+
         pdfs: form.driveLinks.filter((d) => d.title.trim() && d.url.trim()),
+
         youtubeLinks: form.youtubeLinks
-          .filter(Boolean)
-          .map((url) => ({ title: "Playlist", url })),
+          .filter((url) => url.trim())
+          .map((url) => ({
+            title: "Playlist",
+            url,
+          })),
       };
 
       const url = isEditing ? `/api/notes/${initialData._id}` : "/api/notes";
@@ -98,7 +125,7 @@ export default function CreateNote({
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-[32rem] bg-white rounded-xl p-6 space-y-6 shadow-lg"
+      className="w-[34rem] bg-white rounded-2xl p-6 space-y-6 shadow-xl"
     >
       {/* Header */}
       <div>
@@ -106,26 +133,23 @@ export default function CreateNote({
           {isEditing ? "Edit Notes" : "Upload Notes"}
         </h2>
         <p className="text-sm text-gray-500">
-          Upload Google Drive links for notes.
+          Upload Google Drive & YouTube playlists
         </p>
       </div>
 
       {/* Academic Info */}
       <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium mb-1">Course Type</label>
-          <select
-            name="courseType"
-            value={form.courseType}
-            onChange={handleChange}
-            className="w-full border rounded-md px-3 py-2 bg-neutral-50"
-            required
-          >
-            <option value="">Select Course</option>
-            <option>New Course</option>
-            <option>Old Course</option>
-          </select>
-        </div>
+        <select
+          name="courseType"
+          value={form.courseType}
+          onChange={handleChange}
+          className="w-full border rounded-md px-3 py-2 bg-neutral-50"
+          required
+        >
+          <option value="">Select Course</option>
+          <option>New Course</option>
+          <option>Old Course</option>
+        </select>
 
         <div className="grid grid-cols-2 gap-4">
           <input
@@ -144,7 +168,7 @@ export default function CreateNote({
             className="border rounded-md px-3 py-2 bg-neutral-50"
             required
           >
-            <option value="">Select</option>
+            <option value="">Difficulty</option>
             <option>Easy</option>
             <option>Medium</option>
             <option>Hard</option>
@@ -163,50 +187,75 @@ export default function CreateNote({
 
       {/* Drive Links */}
       <div className="space-y-3">
-        <label className="block text-sm font-medium">
-          Google Drive Notes Links
-        </label>
+        <label className="text-sm font-medium">Google Drive Links</label>
 
         {form.driveLinks.map((link, i) => (
-          <div key={i} className="grid grid-cols-2 gap-2">
+          <div key={i} className="flex gap-2">
             <input
-              placeholder="Title (Unit 1 Notes)"
+              placeholder="Title"
               value={link.title}
               onChange={(e) => updateDriveLink(i, "title", e.target.value)}
-              className="border rounded-md px-3 py-2 bg-neutral-50"
+              className="w-1/2 border rounded-md px-3 py-2 bg-neutral-50"
             />
             <input
-              placeholder="Drive link"
+              placeholder="Drive URL"
               value={link.url}
               onChange={(e) => updateDriveLink(i, "url", e.target.value)}
-              className="border rounded-md px-3 py-2 bg-neutral-50"
+              className="flex-1 border rounded-md px-3 py-2 bg-neutral-50"
             />
+            {form.driveLinks.length > 1 && (
+              <button
+                type="button"
+                onClick={() => removeDriveLink(i)}
+                className="text-red-500"
+              >
+                ✕
+              </button>
+            )}
           </div>
         ))}
 
         <button
           type="button"
           onClick={addDriveLink}
-          className="text-sm text-blue-600 hover:underline"
+          className="text-sm text-blue-600"
         >
-          + Add another link
+          + Add Drive Link
         </button>
       </div>
 
       {/* YouTube */}
-      <div>
-        <label className="block text-sm font-medium mb-1">
-          YouTube Playlists
-        </label>
+      <div className="space-y-3">
+        <label className="text-sm font-medium">YouTube Playlists</label>
+
         {form.youtubeLinks.map((link, i) => (
-          <input
-            key={i}
-            value={link}
-            onChange={(e) => handleYoutubeChange(i, e.target.value)}
-            placeholder="https://youtube.com/playlist?..."
-            className="w-full border rounded-md px-3 py-2 bg-neutral-50"
-          />
+          <div key={i} className="flex gap-2">
+            <input
+              value={link}
+              onChange={(e) => handleYoutubeChange(i, e.target.value)}
+              placeholder="https://youtube.com/playlist?..."
+              className="flex-1 border rounded-md px-3 py-2 bg-neutral-50"
+            />
+
+            {form.youtubeLinks.length > 1 && (
+              <button
+                type="button"
+                onClick={() => removeYoutubeLink(i)}
+                className="text-red-500"
+              >
+                ✕
+              </button>
+            )}
+          </div>
         ))}
+
+        <button
+          type="button"
+          onClick={addYoutubeLink}
+          className="text-sm text-blue-600"
+        >
+          + Add Playlist
+        </button>
       </div>
 
       {/* Submit */}

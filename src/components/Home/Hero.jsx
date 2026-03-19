@@ -92,7 +92,7 @@ const Hero = () => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
-            className="relative flex items-center justify-center"
+            className="hidden lg:flex relative items-center justify-center"
           >
             {/* Animated Halo */}
             <motion.div
