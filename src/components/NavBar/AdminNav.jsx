@@ -6,8 +6,7 @@ import { usePathname } from "next/navigation";
 import React from "react";
 
 const AdminNav = ({ isSidebarOpen, setIsSidebarOpen }) => {
-  const { pathname } = usePathname();
-  const path = pathname;
+  const path = usePathname();
 
   return (
     <div className="drawer lg:drawer-open top-0 z-[100]">

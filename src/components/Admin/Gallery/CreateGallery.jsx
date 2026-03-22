@@ -29,36 +29,65 @@ const CreateGallery = ({ flag, setFlag, setBox }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     const title = document.getElementById("title");
     const thumbnail = document.getElementById("thumbnail");
+    const driveInput = document.getElementById("drive_link");
 
     try {
-      const formData = new FormData();
+      // ✅ VALIDATIONS FIRST
+      if (!title.value) {
+        alert("Title is required");
+        setLoading(false);
+        return;
+      }
 
+      if (!thumbnail.files[0]) {
+        alert("Please select a thumbnail image");
+        setLoading(false);
+        return;
+      }
+
+      if (driveInput.value && !driveInput.value.includes("drive.google.com")) {
+        alert("Please enter a valid Google Drive link");
+        setLoading(false);
+        return;
+      }
+
+      const formData = new FormData();
       formData.append("title", title.value);
       formData.append("event_id", selectedEvent);
+      formData.append("drive_link", driveInput.value);
+
       const uploadedUrl = await uploadToImageKit(thumbnail.files[0]);
       if (!uploadedUrl) {
         throw new Error("ImageKit Upload Error");
       }
+
       formData.append("thumbnail_url", uploadedUrl.url);
 
       const response = await fetch(`/api/gallery`, {
         method: "POST",
         body: formData,
-      }).then((r) => {
-        return r.json();
       });
 
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to create gallery");
+      }
+
+      // ✅ SUCCESS ONLY HERE
+      alert("Gallery created successfully");
       setFlag(flag + 1);
       setBox(false);
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      alert("Something went wrong");
     } finally {
-      title.value = null;
+      title.value = "";
       setSelectedEvent("");
       setLoading(false);
-      alert("Gallery created successfully");
     }
   };
 
@@ -105,6 +134,15 @@ const CreateGallery = ({ flag, setFlag, setBox }) => {
             id="thumbnail"
             name="thumbnail"
             className="bg-neutral-200 outline-none p-2 rounded-md w-full "
+          />
+        </div>
+        <div className="flex gap-4 items-center">
+          <label className="w-[30%]">Drive Link</label>
+          <input
+            type="text"
+            id="drive_link"
+            placeholder="Paste Google Drive link"
+            className="bg-neutral-200 outline-none p-2 rounded-md w-full"
           />
         </div>
         <div>

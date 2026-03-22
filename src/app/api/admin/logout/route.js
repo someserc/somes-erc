@@ -1,12 +1,16 @@
+import { NextResponse } from "next/server";
+
 export async function POST(req) {
-  const response = new Response(
-    JSON.stringify({ message: "Logout successful" }),
-    { status: 200 }
+  const response = NextResponse.json(
+    { message: "Logout successful" },
+    { status: 200 },
   );
 
   // Clear the cookie
-  response.cookies.set("admin_token", "", {
+  response.cookies.set("token", "", {
     httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
     path: "/",
     maxAge: 0,
   });

@@ -3,19 +3,16 @@ const Schema = mongoose.Schema;
 
 const gallerySchema = new mongoose.Schema(
   {
-    title: {
-      type: String,
-    },
+    title: String,
     event_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Event",
     },
     description: { type: String, default: "" },
-    thumbnail_url: {
-      type: String,
-    },
+    thumbnail_url: String,
+    drive_link: String, // ✅ NEW
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // gallerySchema.index({ event_id: 1 });

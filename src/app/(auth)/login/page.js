@@ -36,8 +36,8 @@ const AdminLogin = () => {
       const data = await response.json();
 
       if (response.ok) {
-        document.cookie = `token=${data.token}; path=/;`;
-        router.push("/admin");
+        router.replace("/admin");
+        router.refresh();
       } else {
         setMessage(data.error || "Invalid credentials.");
       }

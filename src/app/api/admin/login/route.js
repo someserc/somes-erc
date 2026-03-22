@@ -2,6 +2,7 @@ import connectToDatabase from "@/lib/mongodb";
 import Admin from "@/models/Admin";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { NextResponse } from "next/server";
 
 export async function POST(req) {
   try {
@@ -39,7 +40,18 @@ export async function POST(req) {
     },
   );
 
-  return new Response(JSON.stringify({ message: "Login successful", token }), {
-    status: 200,
+  const response = NextResponse.json(
+    { message: "Login successful" },
+    { status: 200 },
+  );
+
+  response.cookies.set("token", token, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 60 * 60 * 2,
   });
+
+  return response;
 }

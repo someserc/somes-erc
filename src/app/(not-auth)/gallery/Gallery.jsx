@@ -76,10 +76,16 @@ const Gallery = () => {
             gallery
               .filter((item) => item._id)
               .map((item) => (
-                <Link
+                <div
                   key={item._id}
-                  href={`/gallery/${item._id}`}
-                  className="group bg-white border border-background-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition"
+                  onClick={() => {
+                    if (item.drive_link) {
+                      window.open(item.drive_link, "_blank");
+                    } else {
+                      window.location.href = `/gallery/${item._id}`;
+                    }
+                  }}
+                  className="group cursor-pointer bg-white border border-background-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition"
                 >
                   {/* Image */}
                   <div className="relative h-56 w-full overflow-hidden">
@@ -98,7 +104,7 @@ const Gallery = () => {
                       {item.title}
                     </h3>
                   </div>
-                </Link>
+                </div>
               ))
           ) : (
             <p className="text-background-600 text-sm col-span-full text-center">
