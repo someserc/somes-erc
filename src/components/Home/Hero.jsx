@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef } from "react";
 import { motion, useScroll, AnimatePresence } from "framer-motion";
 
 import HeroSplash from "../../components/Home/SplashOverlay";
@@ -9,17 +9,8 @@ import Brain from "../brain/Brain";
 
 import Link from "next/link";
 
-const Hero = () => {
+const Hero = ({ showSplash = false }) => {
   const containerRef = useRef();
-  const [showSplash, setShowSplash] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowSplash(false);
-    }, 1000); // 0.8 seconds
-
-    return () => clearTimeout(timer);
-  }, []);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,

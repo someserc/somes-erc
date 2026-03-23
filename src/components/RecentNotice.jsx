@@ -11,11 +11,26 @@ const montserrat = Montserrat({
   subsets: ["latin"],
 });
 
-const RecentNotice = () => {
-  const [notices, setNotices] = useState([]);
-  const [loading, setLoading] = useState(true);
+const RecentNotice = ({
+  notices: initialNotices,
+  loading: externalLoading = false,
+}) => {
+  const hasInitialNotices = initialNotices !== undefined;
+  const [notices, setNotices] = useState(initialNotices || []);
+  const [loading, setLoading] = useState(!hasInitialNotices);
 
   useEffect(() => {
+    if (hasInitialNotices) {
+      setNotices(initialNotices || []);
+      setLoading(externalLoading);
+    }
+  }, [externalLoading, hasInitialNotices, initialNotices]);
+
+  useEffect(() => {
+    if (hasInitialNotices) {
+      return;
+    }
+
     const getNotices = async () => {
       try {
         const res = await fetch("/api/notice");
@@ -28,7 +43,7 @@ const RecentNotice = () => {
       }
     };
     getNotices();
-  }, []);
+  }, [hasInitialNotices]);
 
   return (
     <div

@@ -10,10 +10,27 @@ const montserrat = Montserrat({
   subsets: ["latin"],
 });
 
-const Events = () => {
-  const [events, setEvents] = useState([]);
+const Events = ({
+  initialEvents,
+  initialNotices,
+  loading: externalLoading = false,
+}) => {
+  const hasInitialEvents = initialEvents !== undefined;
+  const [events, setEvents] = useState(initialEvents || []);
+  const [loading, setLoading] = useState(!hasInitialEvents);
 
   useEffect(() => {
+    if (hasInitialEvents) {
+      setEvents(initialEvents || []);
+      setLoading(externalLoading);
+    }
+  }, [externalLoading, hasInitialEvents, initialEvents]);
+
+  useEffect(() => {
+    if (hasInitialEvents) {
+      return;
+    }
+
     const getEvents = async () => {
       try {
         const res = await fetch("/api/events");
@@ -21,10 +38,12 @@ const Events = () => {
         setEvents(data || []);
       } catch (err) {
         console.error("Failed to fetch events", err);
+      } finally {
+        setLoading(false);
       }
     };
     getEvents();
-  }, []);
+  }, [hasInitialEvents]);
 
   const currentDate = new Date();
 
@@ -58,7 +77,14 @@ const Events = () => {
       <div className="grid grid-cols-1 2xl:grid-cols-[2fr_1fr] gap-12 items-start">
         {/* Events */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {closestEvents.length > 0 ? (
+          {loading ? (
+            Array.from({ length: 4 }).map((_, index) => (
+              <div
+                key={`event-skeleton-${index}`}
+                className="h-[22rem] animate-pulse rounded-lg bg-background-100"
+              />
+            ))
+          ) : closestEvents.length > 0 ? (
             closestEvents.map((event, index) => (
               <NewEventCard key={index} event={event} />
             ))
@@ -71,7 +97,7 @@ const Events = () => {
 
         {/* Notices */}
 
-        <RecentNotice />
+        <RecentNotice notices={initialNotices} loading={loading} />
       </div>
     </section>
   );

@@ -10,11 +10,23 @@ const montserrat = Montserrat({
   subsets: ["latin"],
 });
 
-const Messages = () => {
-  const [messages, setMessages] = useState([]);
-  const [loading, setLoading] = useState(true);
+const Messages = ({ initialMessages, loading: externalLoading = false }) => {
+  const hasInitialMessages = initialMessages !== undefined;
+  const [messages, setMessages] = useState(initialMessages || []);
+  const [loading, setLoading] = useState(!hasInitialMessages);
 
   useEffect(() => {
+    if (hasInitialMessages) {
+      setMessages(initialMessages || []);
+      setLoading(externalLoading);
+    }
+  }, [externalLoading, hasInitialMessages, initialMessages]);
+
+  useEffect(() => {
+    if (hasInitialMessages) {
+      return;
+    }
+
     fetch("/api/messages")
       .then((res) => res.json())
       .then((data) => {
@@ -22,7 +34,7 @@ const Messages = () => {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
+  }, [hasInitialMessages]);
 
   if (loading) {
     return (

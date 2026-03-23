@@ -15,32 +15,37 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  metadataBase: new URL("https://somes-erc.edu.np"),
+  metadataBase: new URL("https://someserc.ioepc.edu.np"),
   title: {
-    default: "SOMES | Purwanchal Campus ERC",
+    default: "SOMES ERC | Society of Mechanical Engineering Students",
     template: "%s | SOMES ERC",
   },
   description:
-    "Society of Mechanical Engineering Students (SOMES) at Purwanchal Campus, ERC. Explore academic notes, events, resources, and student-driven engineering initiatives.",
-
+    "Official website of the Society of Mechanical Engineering Students at IOE Purwanchal Campus, ERC. Explore events, notes, notices, projects, and student-led engineering initiatives.",
   keywords: [
     "SOMES",
     "SOMES ERC",
+    "someserc.ioepc.edu.np",
+    "IOE Purwanchal Campus",
+    "IOEPC",
     "Purwanchal Campus",
+    "Eastern Regional Campus",
     "Mechanical Engineering",
+    "Society of Mechanical Engineering Students",
     "Engineering Notes",
     "ERC Dharan",
     "Mechanical Engineering Students Nepal",
     "Engineering Resources Nepal",
   ],
-
-  authors: [{ name: "SOMES ERC" }],
-  creator: "SOMES Purwanchal Campus",
+  applicationName: "SOMES ERC",
+  authors: [{ name: "SOMES ERC", url: "https://someserc.ioepc.edu.np" }],
+  creator: "SOMES ERC",
   publisher: "SOMES ERC",
-
+  referrer: "origin-when-cross-origin",
   robots: {
     index: true,
     follow: true,
+    nocache: false,
     googleBot: {
       index: true,
       follow: true,
@@ -49,42 +54,45 @@ export const metadata = {
       "max-video-preview": -1,
     },
   },
-
   alternates: {
     canonical: "/",
+    languages: {
+      "en-US": "/",
+    },
   },
-
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://someserc.ioepc.edu.np",
     siteName: "SOMES ERC",
-    title: "SOMES | Purwanchal Campus ERC",
+    title: "SOMES ERC | Society of Mechanical Engineering Students",
     description:
-      "Official SOMES platform of Purwanchal Campus ERC notes, events, academic resources, and student innovation.",
+      "Official SOMES platform for IOE Purwanchal Campus ERC with events, academic notes, notices, projects, and student innovation.",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "SOMES Purwanchal Campus ERC",
+        alt: "SOMES ERC at IOE Purwanchal Campus",
       },
     ],
   },
-
   twitter: {
     card: "summary_large_image",
-    title: "SOMES | Purwanchal Campus ERC",
+    title: "SOMES ERC | Society of Mechanical Engineering Students",
     description:
-      "Official SOMES platform of Purwanchal Campus ERC — notes, events, academic resources, and student innovation.",
+      "Official SOMES platform for IOE Purwanchal Campus ERC with events, academic notes, notices, projects, and student innovation.",
     images: ["/og-image.png"],
   },
-
   icons: {
-    // shortcut: "/favicon-16x16.png",
+    // icon: [
+    //   { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    //   { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+    // ],
+    // shortcut: "/favicon-32x32.png",
     apple: "/apple-touch-icon.png",
   },
-
+  manifest: "/site.webmanifest",
   category: "education",
 };
 

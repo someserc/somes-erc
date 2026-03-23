@@ -16,12 +16,27 @@ const montserrat = Montserrat({
   subsets: ["latin"],
 });
 
-const Testimonials = () => {
+const Testimonials = ({
+  initialTestimonials,
+  loading: externalLoading = false,
+}) => {
   const sliderRef = useRef(null);
-  const [testimonials, setTestimonials] = useState([]);
+  const hasInitialTestimonials = initialTestimonials !== undefined;
+  const [testimonials, setTestimonials] = useState(initialTestimonials || []);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    if (hasInitialTestimonials) {
+      setTestimonials(initialTestimonials || []);
+    }
+  }, [hasInitialTestimonials, initialTestimonials]);
+
+  useEffect(() => {
+    if (hasInitialTestimonials) {
+      setMounted(true);
+      return;
+    }
+
     const getTestimonials = async () => {
       try {
         const res = await fetch("/api/testimonial");
@@ -34,7 +49,7 @@ const Testimonials = () => {
     getTestimonials();
     // mark as mounted so we only render client-only slider after hydration
     setMounted(true);
-  }, []);
+  }, [hasInitialTestimonials]);
 
   const settings = {
     dots: true,
@@ -88,7 +103,16 @@ const Testimonials = () => {
 
         {/* Slider */}
         <div className="w-full">
-          {mounted ? (
+          {externalLoading && !testimonials.length ? (
+            <div className="grid gap-6 md:grid-cols-2">
+              {Array.from({ length: 2 }).map((_, index) => (
+                <div
+                  key={`testimonial-skeleton-${index}`}
+                  className="h-56 animate-pulse rounded-2xl bg-background-100"
+                />
+              ))}
+            </div>
+          ) : mounted ? (
             <Slider {...settings} ref={sliderRef}>
               {testimonials.map((item, index) => (
                 <TestimonialCard key={item._id || index} item={item} />
