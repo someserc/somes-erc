@@ -125,16 +125,16 @@ const NoticePage = ({ slug }) => {
   };
 
   return (
-    <div className="w-full min-h-[49rem]  flex justify-center py-16 bg-neutral-100  ">
-      <div className="w-full h-full flex justify-center ">
-        <div className="w-[65%] h-full flex flex-col items-center ">
-          <div className="w-full min-h-[44rem] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ">
+    <div className="flex min-h-[49rem] w-full justify-center bg-neutral-100 px-4 py-10 md:px-6 md:py-16">
+      <div className="flex h-full w-full max-w-7xl flex-col justify-center gap-8 lg:flex-row">
+        <div className="flex h-full w-full flex-col items-center lg:w-[70%]">
+          <div className="grid min-h-[44rem] w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {loading ? (
               <>
                 {Array.from({ length: 6 }, (_, i) => (
                   <div
                     key={i}
-                    className="w-[90%] min-h-[20rem] flex flex-col gap-4 mb-4 "
+                    className="mb-4 flex min-h-[20rem] w-full flex-col gap-4"
                   >
                     <Skeleton className="h-[10rem]" />
                     <Skeleton className="h-[2rem]" width={"100%"} />
@@ -153,26 +153,28 @@ const NoticePage = ({ slug }) => {
             )}
           </div>
           {notices && (
-            <div className="h-full flex items-center ">
+            <div className="mt-4 flex h-full w-full flex-wrap items-center justify-center gap-2">
               <button
                 onClick={() => handlePageClick(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="w-full h-full disabled:text-neutral-300 text-black "
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300 bg-white text-black disabled:text-neutral-300"
               >
                 <ArrowBackIosNewOutlined color="inherit" />
               </button>
-              {renderPagination()}
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                {renderPagination()}
+              </div>
               <button
                 onClick={() => handlePageClick(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="w-full h-full disabled:text-neutral-300 text-black "
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300 bg-white text-black disabled:text-neutral-300"
               >
                 <ArrowForwardIosOutlined />
               </button>
             </div>
           )}
         </div>
-        <div className="w-[25%] hidden md:flex ">
+        <div className="hidden w-full max-w-sm lg:flex ">
           <RecentNotice />
         </div>
       </div>

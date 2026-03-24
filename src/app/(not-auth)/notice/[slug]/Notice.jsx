@@ -60,17 +60,17 @@ const NoticeSlug = () => {
     );
   } else {
     return (
-      <div className="w-full flex justify-center my-20 min-h-[49rem]">
-        <div className="w-[90%] flex ">
+      <div className="my-12 flex min-h-[49rem] w-full justify-center px-4 md:my-20">
+        <div className="flex w-full max-w-7xl">
           <div className="w-full ">
             <div className="w-full flex flex-col items-center ">
-              <div className="w-full mb-14 ">
-                <motion.h1 className="text-4xl text-black font-extrabold font-[Arial] flex gap-5">
+              <div className="w-full mb-10 md:mb-14 ">
+                <motion.h1 className="flex items-start gap-3 text-2xl font-extrabold text-black md:gap-5 md:text-4xl font-[Arial]">
                   <svg
                     width={40}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 512 512"
-                    className="cursor-pointer hover:scale-110 duration-300 w-[3%] "
+                    className="mt-1 h-6 w-6 shrink-0 cursor-pointer duration-300 hover:scale-110 md:h-8 md:w-8 "
                     onClick={() => {
                       router.push("/notice");
                     }}
@@ -80,7 +80,7 @@ const NoticeSlug = () => {
                   {notice?.title}
                 </motion.h1>
 
-                <div className="w-full flex h-[4rem] items-center text-neutral-500 text-lg ">
+                <div className="flex min-h-[4rem] w-full flex-wrap items-center text-base text-neutral-500 md:text-lg ">
                   <CalendarMonth />
                   <span className="ml-2 font-semibold">
                     {formattedDate} {formattedTime}{" "}
@@ -90,8 +90,8 @@ const NoticeSlug = () => {
                   {notice?.description}
                 </div>
               </div>
-              <div className="flex w-full justify-between ">
-                <div className="lg:flex-none flex-1 border-2 lg:w-[60%]">
+              <div className="flex w-full flex-col gap-8 lg:flex-row lg:justify-between ">
+                <div className="flex-1 border-2 lg:w-[60%]">
                   {/* <Image
                   alt="notice image"
                   src={`${process.env.NEXT_PUBLIC_SERVER_ADDRESS}/${notice.image}`}
@@ -103,7 +103,7 @@ const NoticeSlug = () => {
                   {isPDF ? (
                     <iframe
                       src={`${notice?.image}`}
-                      className="w-full h-[50rem] " // Adjust height as needed
+                      className="w-full h-[70vh] min-h-[28rem] md:h-[50rem] " // Adjust height as needed
                     ></iframe>
                   ) : (
                     <Image
@@ -111,13 +111,13 @@ const NoticeSlug = () => {
                       src={`${notice?.image}`}
                       width={100}
                       height={100}
-                      className="cursor-pointer w-full"
+                      className="cursor-pointer h-auto w-full"
                       unoptimized
                     />
                   )}
                   {/* <div dangerouslySetInnerHTML={{ __html: notice.content }} /> */}
                 </div>
-                <div className="container hidden lg:flex md:w-[30%] px-5 py-4 h-max">
+                <div className="container hidden h-max lg:flex md:w-[30%] px-0 lg:px-5 py-0 lg:py-4">
                   <RecentNotice />
                 </div>
               </div>

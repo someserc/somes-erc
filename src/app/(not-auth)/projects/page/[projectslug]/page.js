@@ -132,13 +132,13 @@ const ProjectPage = () => {
     return pages;
   };
   return (
-    <div className="md:min-h-[49rem] w-full md:mt-10 flex ">
+    <div className="flex w-full md:mt-10">
       <div
-        className={`flex flex-col items-center h-full rounded w-full md:w-[70%] ${montserrat.className}`}
+        className={`flex h-full w-full flex-col items-center rounded px-4 py-8 lg:w-[70%] md:px-6 ${montserrat.className}`}
       >
-        <h1 className=" md:text-[40px] font-bold">List of Projects</h1>
-        <div className="w-full flex justify-center min-h-[36rem] ">
-          <table className="w-[90%] md:w-[60%] h-fit mt-10 border-y-2 border-gray-400">
+        <h1 className="text-2xl font-bold md:text-[40px]">List of Projects</h1>
+        <div className="flex min-h-[36rem] w-full justify-center overflow-x-auto">
+          <table className="mt-10 h-fit min-w-[320px] w-full max-w-3xl border-y-2 border-gray-400">
             <thead className="w-full border-y-2 border-gray-400 bg-gray-200">
               <tr className="w-full  border-y-2 border-gray-400 text-gray-600">
                 <th className="w-[12%] py-2 border-y-2 border-gray-400">
@@ -170,26 +170,28 @@ const ProjectPage = () => {
           </table>
         </div>
         {projects?.docs && (
-          <div className="h-fit flex items-center ">
+          <div className="mt-4 flex h-fit w-full flex-wrap items-center justify-center gap-2">
             <button
               onClick={() => handlePageClick(currentPage - 1)}
               disabled={currentPage === 1}
-              className="w-full h-full disabled:text-neutral-300 text-black "
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300 bg-white text-black disabled:text-neutral-300"
             >
               <ArrowBackIosNewOutlined color="inherit" />
             </button>
-            {renderPagination()}
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              {renderPagination()}
+            </div>
             <button
               onClick={() => handlePageClick(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="w-full h-full disabled:text-neutral-300 text-black "
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300 bg-white text-black disabled:text-neutral-300"
             >
               <ArrowForwardIosOutlined />
             </button>
           </div>
         )}
       </div>
-      <div className="h-fit w-[25%] py-5 hidden md:flex flex-col gap-8 ">
+      <div className="hidden h-fit w-[25%] py-5 lg:flex flex-col gap-8 ">
         <RecentNotice />
         <FollowUs />
       </div>

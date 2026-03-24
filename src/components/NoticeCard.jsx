@@ -24,10 +24,10 @@ const NoticeCard = ({ notice }) => {
 
   return (
     <div
-      className={`w-[80%] h-full md:h-[40%] flex flex-col items-center ${montserrat.className} gap-4 border-2 border-secondary-800 overflow-hidden rounded-lg`}
+      className={`flex h-full w-full max-w-sm flex-col items-center gap-4 overflow-hidden rounded-lg border-2 border-secondary-800 ${montserrat.className}`}
     >
       {/* Top Image Section */}
-      <div className="w-full h-[10rem]  flex justify-center items-center">
+      <div className="flex h-[10rem] w-full items-center justify-center">
         <Image
           alt="SOMES Logo"
           width={150}
@@ -39,7 +39,7 @@ const NoticeCard = ({ notice }) => {
       </div>
 
       {/* Content Section */}
-      <div className="w-[90%] flex flex-col gap-2 overflow-hidden">
+      <div className="flex w-full flex-col gap-2 overflow-hidden px-4 pb-4">
         <Link href={`/notice/${notice._id}`}>
           <div
             className={`text-xl font-semibold hover:text-primary-400 transition-colors duration-300 line-clamp-2 ${inter.className}`}
@@ -47,7 +47,7 @@ const NoticeCard = ({ notice }) => {
             {notice.title}
           </div>
         </Link>
-        <div className="text-neutral-500 font-sans font-semibold flex items-center gap-2 text-sm">
+        <div className="flex flex-wrap items-center gap-2 text-sm font-semibold text-neutral-500">
           <CalendarMonth color="inherit" />
           <span>{formattedDate}</span>
           <span>{formattedTime}</span>

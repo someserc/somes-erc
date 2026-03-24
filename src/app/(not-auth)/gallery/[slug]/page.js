@@ -75,14 +75,13 @@ const GallerySlug = () => {
   };
 
   return (
-    <div className="relative flex flex-col items-center min-h-[49rem] w-full">
-      {/* ERROR */}
+    <div className="relative flex min-h-[49rem] w-full flex-col items-center">
       {error && (
-        <div className="flex flex-col items-center justify-center min-h-[49rem]">
-          <h2 className="text-red-500 text-2xl">{error}</h2>
+        <div className="flex min-h-[49rem] flex-col items-center justify-center px-4 text-center">
+          <h2 className="text-2xl text-red-500">{error}</h2>
           <button
             onClick={() => router.push("/gallery")}
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+            className="mt-4 rounded bg-blue-500 px-4 py-2 text-white"
           >
             Back to Gallery
           </button>
@@ -91,36 +90,34 @@ const GallerySlug = () => {
 
       {!error && (
         <>
-          {/* TITLE */}
-          <div className="w-[95%] flex h-[4rem] items-center mt-5">
+          <div className="mt-5 flex min-h-[4rem] w-[95%] items-center gap-3">
             <svg
               width={40}
               viewBox="0 0 512 512"
-              className="cursor-pointer hover:scale-110 duration-300 w-[3%]"
+              className="h-6 w-6 shrink-0 cursor-pointer duration-300 hover:scale-110 md:h-8 md:w-8"
               onClick={() => router.push("/gallery")}
             >
-              <path d="M256 0C114.6 0 0 114.6..." />
+              <path d="M256 0C114.6 0 0 114.6 0 256c0 141.4 114.6 256 256 256s256-114.6 256-256C512 114.6 397.4 0 256 0zM384 288H205.3l49.38 49.38c12.5 12.5 12.5 32.75 0 45.25s-32.75 12.5-45.25 0L105.4 278.6C97.4 270.7 96 260.9 96 256c0-4.883 1.391-14.66 9.398-22.65l103.1-103.1c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25L205.3 224H384c17.69 0 32 14.33 32 32S401.7 288 384 288z" />
             </svg>
 
-            <div className="flex items-center justify-center w-[97%]">
+            <div className="flex w-full items-center justify-center">
               <div
-                className={`text-[36px] underline font-bold ${montserrat.className}`}
+                className={`text-center text-2xl font-bold underline md:text-[36px] ${montserrat.className}`}
               >
                 {gallery?.title}
               </div>
             </div>
           </div>
 
-          {/* GRID */}
-          <div className="w-[80%]">
+          <div className="w-[92%] md:w-[88%] lg:w-[80%]">
             <div className="gallery w-full gap-2 pb-20">
               {loading
                 ? loader.map((i) => (
                     <div
                       key={i}
-                      className="w-full h-[20rem] mb-8 shadow-2xl rounded-lg"
+                      className="mb-8 h-[20rem] w-full rounded-lg shadow-2xl"
                     >
-                      <Skeleton className="w-full h-full" />
+                      <Skeleton className="h-full w-full" />
                     </div>
                   ))
                 : gallery?.images?.map((image, i) => (
@@ -130,7 +127,7 @@ const GallerySlug = () => {
                         alt="gallery-image"
                         width={600}
                         height={400}
-                        className="cursor-pointer"
+                        className="h-auto w-full cursor-pointer"
                         onClick={() => showImagePopup(i)}
                         unoptimized
                       />
@@ -139,28 +136,27 @@ const GallerySlug = () => {
             </div>
           </div>
 
-          {/* POPUP */}
           {popupIndex !== null && (
-            <motion.div className="fixed inset-0 flex items-center justify-center bg-black/70 z-[100]">
+            <motion.div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 px-3">
               <button
                 onClick={hideImagePopup}
-                className="absolute top-8 right-8 bg-white p-2 rounded-full"
+                className="absolute right-4 top-4 rounded-full bg-white p-2 md:right-8 md:top-8"
               >
-                ✕
+                x
               </button>
 
               <button
                 onClick={showPrevImage}
-                className="absolute left-4 top-1/2 bg-white p-2 rounded-full"
+                className="absolute left-3 top-1/2 rounded-full bg-white p-2 md:left-4"
               >
-                ←
+                {"<"}
               </button>
 
               <button
                 onClick={showNextImage}
-                className="absolute right-4 top-1/2 bg-white p-2 rounded-full"
+                className="absolute right-3 top-1/2 rounded-full bg-white p-2 md:right-4"
               >
-                →
+                {">"}
               </button>
 
               <AnimatePresence>
@@ -173,7 +169,7 @@ const GallerySlug = () => {
                     alt="popup-image"
                     width={800}
                     height={600}
-                    className="object-contain w-[80vw] h-[90vh]"
+                    className="h-[78vh] w-[86vw] object-contain md:h-[90vh] md:w-[80vw]"
                     priority
                     unoptimized
                   />

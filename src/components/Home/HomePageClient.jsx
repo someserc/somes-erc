@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Events from "@/components/Home/Events";
 import Hero from "@/components/Home/Hero";
+import LatestNoticePopup from "@/components/Home/LatestNoticePopup";
 import Messages from "@/components/Home/Messages";
 import Testimonials from "@/components/Home/Testimonials";
 import {
@@ -11,6 +12,7 @@ import {
 } from "@/components/Home/homePageData";
 
 const HOME_SPLASH_KEY = "somes-home-splash-seen";
+const HOME_NOTICE_DISMISS_KEY = "somes-home-latest-notice-dismissed";
 const SPLASH_DURATION_MS = 2000;
 
 const wait = (duration) =>
@@ -22,6 +24,7 @@ export default function HomePageClient() {
   const [homeData, setHomeData] = useState(() => getCachedHomePageData());
   const [loading, setLoading] = useState(!getCachedHomePageData());
   const [showSplash, setShowSplash] = useState(false);
+  const [showLatestNotice, setShowLatestNotice] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -70,8 +73,48 @@ export default function HomePageClient() {
     };
   }, []);
 
+  useEffect(() => {
+    if (showSplash || loading) {
+      return;
+    }
+
+    const latestNotice = homeData?.notices?.[0];
+
+    if (!latestNotice?._id) {
+      return;
+    }
+
+    const dismissedNoticeId = sessionStorage.getItem(HOME_NOTICE_DISMISS_KEY);
+
+    if (dismissedNoticeId === latestNotice._id) {
+      return;
+    }
+
+    const openTimer = setTimeout(() => {
+      setShowLatestNotice(true);
+    }, 180);
+
+    return () => clearTimeout(openTimer);
+  }, [homeData?.notices, loading, showSplash]);
+
+  const handleCloseLatestNotice = () => {
+    const latestNoticeId = homeData?.notices?.[0]?._id;
+
+    if (latestNoticeId) {
+      sessionStorage.setItem(HOME_NOTICE_DISMISS_KEY, latestNoticeId);
+    }
+
+    setShowLatestNotice(false);
+  };
+
   return (
     <div className="w-full min-h-[149rem] flex flex-col items-center">
+      <LatestNoticePopup
+        notice={homeData?.notices?.[0]}
+        open={showLatestNotice}
+        onClose={handleCloseLatestNotice}
+      />
+
       <div className="w-full md:h-[40rem]">
         <Hero showSplash={showSplash} />
       </div>

@@ -32,8 +32,9 @@ export default function AlumniPage() {
               src="https://docs.google.com/forms/d/e/1FAIpQLSdmMxGNq57glbvq8htLks0ZFAm5kWkx6RqxfrusfKHESp5FCg/viewform?embedded=true"
               className="
                 w-full
-                h-[75vh]
-                min-h-[700px]
+                h-[80vh]
+                min-h-[560px]
+                md:min-h-[700px]
               "
               title="Alumni Testimonial Form"
             >
