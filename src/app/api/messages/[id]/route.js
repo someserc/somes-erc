@@ -6,7 +6,7 @@ export async function PUT(req, { params }) {
   try {
     await dbConnect();
 
-    const { id } = params;
+    const { id } = await params;
     const formData = await req.formData();
     const body = Object.fromEntries(formData);
 
@@ -17,7 +17,7 @@ export async function PUT(req, { params }) {
     if (!updated) {
       return NextResponse.json(
         { success: false, error: "Message not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -25,7 +25,7 @@ export async function PUT(req, { params }) {
   } catch (error) {
     return NextResponse.json(
       { success: false, error: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -34,13 +34,13 @@ export async function DELETE(req, { params }) {
   try {
     await dbConnect();
 
-    const { id } = params;
+    const { id } = await params;
     const deleted = await LeadershipMessage.findByIdAndDelete(id);
 
     if (!deleted) {
       return NextResponse.json(
         { success: false, error: "Message not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -48,7 +48,7 @@ export async function DELETE(req, { params }) {
   } catch (error) {
     return NextResponse.json(
       { success: false, error: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

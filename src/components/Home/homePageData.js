@@ -21,17 +21,39 @@ const parseJson = async (response, fallback) => {
   return fallback(data);
 };
 
+const fetchWithTimeout = async (url, options = {}, timeout = 10000) => {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+    return response;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    if (error.name === "AbortError") {
+      throw new Error(`Request timeout after ${timeout}ms`);
+    }
+    throw error;
+  }
+};
+
 const loadHomePageData = async () => {
   const results = await Promise.allSettled([
-    fetch("/api/messages").then((response) =>
-      parseJson(response, (data) => data.data || [])
+    fetchWithTimeout("/api/messages", {}, 15000).then((response) =>
+      parseJson(response, (data) => data.data || []),
     ),
-    fetch("/api/events").then((response) => parseJson(response, (data) => data || [])),
-    fetch("/api/testimonial").then((response) =>
-      parseJson(response, (data) => data.data || [])
+    fetchWithTimeout("/api/events", {}, 15000).then((response) =>
+      parseJson(response, (data) => data || []),
     ),
-    fetch("/api/notice").then((response) =>
-      parseJson(response, (data) => data.docs || [])
+    fetchWithTimeout("/api/testimonial", {}, 15000).then((response) =>
+      parseJson(response, (data) => data.data || []),
+    ),
+    fetchWithTimeout("/api/notice?page=1&limit=6", {}, 15000).then((response) =>
+      parseJson(response, (data) => data.docs || []),
     ),
   ]);
 
@@ -42,9 +64,12 @@ const loadHomePageData = async () => {
       }
 
       const sectionNames = ["messages", "events", "testimonials", "notices"];
-      console.error(`Failed to preload ${sectionNames[index]}`, result.reason);
+      console.warn(
+        `Failed to load ${sectionNames[index]}:`,
+        result.reason?.message || result.reason,
+      );
       return emptyHomePageData[sectionNames[index]];
-    }
+    },
   );
 
   return {

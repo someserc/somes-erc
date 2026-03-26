@@ -7,16 +7,17 @@ export async function PUT(req, { params }) {
   try {
     await connectToDatabase();
 
+    const { id } = await params;
     const body = await req.json();
 
-    const updated = await Faculty.findByIdAndUpdate(params.id, body, {
+    const updated = await Faculty.findByIdAndUpdate(id, body, {
       new: true,
     });
 
     if (!updated) {
       return NextResponse.json(
         { success: false, message: "Faculty not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -28,7 +29,7 @@ export async function PUT(req, { params }) {
     console.error(error);
     return NextResponse.json(
       { success: false, message: "Server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -38,12 +39,13 @@ export async function DELETE(req, { params }) {
   try {
     await connectToDatabase();
 
-    const deleted = await Faculty.findByIdAndDelete(params.id);
+    const { id } = await params;
+    const deleted = await Faculty.findByIdAndDelete(id);
 
     if (!deleted) {
       return NextResponse.json(
         { success: false, message: "Faculty not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -55,7 +57,7 @@ export async function DELETE(req, { params }) {
     console.error(error);
     return NextResponse.json(
       { success: false, message: "Server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

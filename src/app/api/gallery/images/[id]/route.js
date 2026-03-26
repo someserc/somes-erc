@@ -42,7 +42,7 @@ export async function GET(request, { params }) {
 }
 
 export async function POST(request, { params }) {
-  const { id } = params;
+  const { id } = await params;
 
   if (!id || id === "undefined" || id.length !== 24) {
     return new Response(JSON.stringify({ error: "Invalid gallery ID" }), {

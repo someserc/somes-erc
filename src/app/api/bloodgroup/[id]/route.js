@@ -4,7 +4,7 @@ import Bloodgroup from "@/models/Bloodgroup";
 
 export async function GET(req, { params }) {
   await connectDB();
-  const { id } = params;
+  const { id } = await params;
   try {
     const entry = await Bloodgroup.findById(id);
     if (!entry)
@@ -17,7 +17,7 @@ export async function GET(req, { params }) {
 
 export async function PUT(req, { params }) {
   await connectDB();
-  const { id } = params;
+  const { id } = await params;
   const body = await req.json();
   try {
     const updatedEntry = await Bloodgroup.findByIdAndUpdate(id, body, {
@@ -34,7 +34,7 @@ export async function PUT(req, { params }) {
 
 export async function DELETE(req, { params }) {
   await connectDB();
-  const { id } = params;
+  const { id } = await params;
   try {
     const deleted = await Bloodgroup.findByIdAndDelete(id);
     if (!deleted)

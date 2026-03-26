@@ -8,7 +8,7 @@ import Event from "@/models/Event";
 dbConnect();
 
 export const GET = async (req, { params }) => {
-  const { id } = params;
+  const { id } = await params;
   try {
     const event = await Event.findById(id);
     if (!event) {
@@ -32,7 +32,7 @@ export const GET = async (req, { params }) => {
 };
 
 export const PUT = async (req, { params }) => {
-  const { id } = params;
+  const { id } = await params;
   try {
     const formData = await req.formData();
     const body = Object.fromEntries(formData);
@@ -82,7 +82,7 @@ export const PUT = async (req, { params }) => {
 };
 
 export const DELETE = async (req, { params }) => {
-  const { id } = params;
+  const { id } = await params;
   try {
     const deletedEvent = await Event.findByIdAndDelete(id);
     if (!deletedEvent) {

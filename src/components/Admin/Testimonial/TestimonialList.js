@@ -6,8 +6,27 @@ export default function TestimonialList({ testimonials, refresh }) {
   const [editing, setEditing] = useState(null);
 
   const handleDelete = async (id) => {
-    await fetch(`/api/testimonial/${id}`, { method: "DELETE" });
-    refresh();
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this testimonial? This action cannot be undone.",
+    );
+
+    if (!confirmDelete) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/testimonial/${id}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        refresh();
+      } else {
+        alert("Failed to delete testimonial. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error deleting testimonial:", error);
+      alert("An error occurred while deleting the testimonial.");
+    }
   };
 
   const handleEdit = async (data) => {
