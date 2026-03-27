@@ -3,7 +3,14 @@
 import React, { useEffect, useState } from "react";
 import uploadToImageKit from "@/utils/uploadToImageKit";
 
-const POSTS = ["HOD", "Deputy HOD", "Lecturer", "Coordinator"];
+const POSTS = [
+  "HOD",
+  "Deputy HOD",
+  "Lecturer",
+  "Coordinator",
+  "Campus Chief",
+  "Assistant Campus Chief",
+];
 const QUALIFICATIONS = [
   "Professor",
   "Associate Professor",
