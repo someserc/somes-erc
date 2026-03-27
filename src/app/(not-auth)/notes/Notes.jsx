@@ -9,6 +9,30 @@ export default function NotesPage() {
   const [course, setCourse] = useState("");
   const [semester, setSemester] = useState("");
 
+  // 🔧 Helper: Extract semester number
+  const getSemesterNumber = (sem) => {
+    if (!sem) return 999;
+
+    // Extract number (works for "Semester 1", "1st Semester")
+    const match = sem.match(/\d+/);
+    if (match) return parseInt(match[0]);
+
+    // Handle word format ("First Semester")
+    const map = {
+      First: 1,
+      Second: 2,
+      Third: 3,
+      Fourth: 4,
+      Fifth: 5,
+      Sixth: 6,
+      Seventh: 7,
+      Eighth: 8,
+    };
+
+    const word = sem.split(" ")[0];
+    return map[word] || 999;
+  };
+
   useEffect(() => {
     setLoading(true);
     fetch("/api/notes")
@@ -20,20 +44,31 @@ export default function NotesPage() {
       .catch(() => setLoading(false));
   }, []);
 
+  // 🎯 Get semesters (sorted properly)
   const semesters = useMemo(() => {
     if (!course) return [];
-    return [
+
+    const uniqueSemesters = [
       ...new Set(
         notes.filter((n) => n.courseType === course).map((n) => n.semester),
       ),
     ];
+
+    return uniqueSemesters.sort(
+      (a, b) => getSemesterNumber(a) - getSemesterNumber(b),
+    );
   }, [course, notes]);
 
+  // 🎯 Filter + sort notes
   const filteredNotes = useMemo(() => {
-    return notes.filter(
+    let filtered = notes.filter(
       (n) =>
         (!course || n.courseType === course) &&
         (!semester || n.semester === semester),
+    );
+
+    return filtered.sort(
+      (a, b) => getSemesterNumber(a.semester) - getSemesterNumber(b.semester),
     );
   }, [notes, course, semester]);
 
@@ -56,6 +91,7 @@ export default function NotesPage() {
       {/* Filters */}
       <div className="mb-14 flex justify-center">
         <div className="bg-white border rounded-xl shadow-sm p-5 flex flex-col md:flex-row gap-4">
+          {/* Course */}
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">
               Course
@@ -74,6 +110,7 @@ export default function NotesPage() {
             </select>
           </div>
 
+          {/* Semester */}
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">
               Semester

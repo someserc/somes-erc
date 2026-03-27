@@ -1,4 +1,3 @@
-import uploadToImageKit from "@/utils/uploadToImageKit";
 import React, { useState } from "react";
 
 const CreateProject = ({ flag, setFlag, setBox }) => {
@@ -29,12 +28,8 @@ const CreateProject = ({ flag, setFlag, setBox }) => {
     try {
       setLoading(true);
       const formData = new FormData();
-      const uploadedUrl = await uploadToImageKit(content.files[0]);
-      if (!uploadedUrl) {
-        throw new Error("ImageKit Upload Error");
-      }
       formData.append("title", title.value);
-      formData.append("content", uploadedUrl.url);
+      formData.append("content", content.value); // Now content is the drive link
       formData.append("category", category.value);
 
       const response = await fetch(`/api/projects`, {
@@ -78,10 +73,16 @@ const CreateProject = ({ flag, setFlag, setBox }) => {
 
         <div className="flex flex-col w-full h-fit gap-2">
           <label htmlFor="content" className="text-lg">
-            Content (PDF)
+            Drive Link
           </label>
 
-          <input name="content" type="file" id="content" />
+          <input
+            name="content"
+            type="url"
+            id="content"
+            placeholder="https://drive.google.com/..."
+            className="bg-neutral-100 py-2 rounded-lg px-2 outline-none "
+          />
         </div>
         <div className="flex flex-col w-full h-fit gap-2">
           <label htmlFor="category" className="text-lg">

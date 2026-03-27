@@ -10,7 +10,7 @@ export async function POST(req) {
   } catch (error) {
     return Response.json(
       { success: false, error: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -27,13 +27,13 @@ export async function GET(req) {
     if (courseType) filter.courseType = courseType;
     if (semester) filter.semester = semester;
 
-    const notes = await Note.find(filter).sort({ subject: 1 });
+    const notes = await Note.find(filter).sort({ semester: 1, subject: 1 });
 
     return Response.json({ success: true, data: notes });
   } catch (error) {
     return Response.json(
       { success: false, error: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

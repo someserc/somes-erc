@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import Project from "@/models/Project";
-import handleSingleFileUpload from "@/utils/handleSingleFileUpload";
 
 // Handle GET request for fetching projects
 export async function GET(req) {
@@ -24,7 +23,7 @@ export async function GET(req) {
           page: parseInt(page),
           limit: parseInt(limit),
           sort: { createdAt: -1 },
-        }
+        },
       );
       return NextResponse.json(allProjects, { status: 200 });
     }
@@ -32,7 +31,7 @@ export async function GET(req) {
     console.error("Error fetching projects:", error);
     return NextResponse.json(
       { message: "Internal Server Error", error },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -54,11 +53,14 @@ export async function POST(req) {
 
     await newProject.save();
 
-    return NextResponse.json({
-      success: true,
-      message: "Project created successfully",
-      data: newProject,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Project created successfully",
+        data: newProject,
+      },
+      { status: 201 },
+    );
   } catch (error) {
     console.error("Error creating project:", error);
     return NextResponse.json({
@@ -82,7 +84,7 @@ export async function DELETE(req) {
           success: false,
           message: "Project ID is required",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -94,7 +96,7 @@ export async function DELETE(req) {
           success: false,
           message: "Project not found",
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -110,7 +112,7 @@ export async function DELETE(req) {
         message: "Error deleting project",
         error: error.message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
